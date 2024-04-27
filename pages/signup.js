@@ -8,6 +8,7 @@ const Signup = () => {
     lastname: '',
     username: '',
     password: '',
+    address: '',
     phone_number: ''
   });
 
@@ -60,6 +61,14 @@ const Signup = () => {
               placeholder="Password"
               className="w-full lg:w-1/2 mx-auto p-2 border border-gray-300 rounded-lg"
               value={formData.password}
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              name="address"
+              placeholder="Address"
+              className="w-full lg:w-1/2 mx-auto p-2 border border-gray-300 rounded-lg"
+              value={formData.address}
               onChange={handleChange}
             />
             <input
