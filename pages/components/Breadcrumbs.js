@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Icon } from '@iconify/react';
 import Container from './Container';
 
-const Breadcrumbs = () => {
+const Breadcrumbs = ({disabled = false}) => {
   const router = useRouter();
   const pathSegments = router.asPath.split('/').filter(segment => segment);
 
@@ -14,7 +14,7 @@ const Breadcrumbs = () => {
       <Container>
         <div className='w-full flex flex-row py-3 '>
 
-          {pathSegments.map((segment, index) => (
+          { !disabled && pathSegments.map((segment, index) => (
             <div 
               key={index}
               className='flex flex-row items-center bg-inherit'  
