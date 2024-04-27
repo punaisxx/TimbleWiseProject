@@ -1,44 +1,61 @@
-// import { useState, useEffect } from 'react';
-// import { fetchTransactionData } from '../api'; // Example function to fetch transaction data
+import salesData from "../income/sales_data"
+import { useState, useEffect } from 'react';
+import LineGraph from '../components/lineGraph';
 
-// export default function DashboardPage() {
-//     const [dailyIncomeData, setDailyIncomeData] = useState([]);
+export default function Income() {
+        const [totalSalesLatestSevenDays, setTotalSalesLatestSevenDays] = useState(0);
+        useEffect(() => {
+                const currentDate = new Date();
+                const sevenDaysAgo = new Date(currentDate);
+                sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-//     useEffect(() => {
-//         // Fetch transaction data when the component mounts
-//         fetchTransactionData()
-//             .then(transactions => {
-//                 // Group transactions by day
-//                 const incomeByDay = {};
-//                 transactions.forEach(transaction => {
-//                     const date = new Date(transaction.timestamp).toLocaleDateString();
-//                     incomeByDay[date] = (incomeByDay[date] || 0) + transaction.amount;
-//                 });
-                
-//                 // Convert grouped data into an array of objects
-//                 const incomeDataArray = Object.entries(incomeByDay).map(([date, income]) => ({
-//                     date,
-//                     income
-//                 }));
-//                 setDailyIncomeData(incomeDataArray);
-//             })
-//             .catch(error => {
-//                 console.error('Error fetching transaction data:', error);
-//             });
-//     }, []); // Empty dependency array to run effect only once when component mounts
+                const totalSales = salesData.reduce((total, day) => {
+                        const salesDate = new Date(day.date);
+                        if (salesDate >= sevenDaysAgo && salesDate <= currentDate) {
+                                return total + day.sales;
+                        }
+                        return total;
+                      }, 0);
+                  
+                      setTotalSalesLatestSevenDays(totalSales);
+        }, []);
 
-//     return (
-//         <div>
-//             <h1>Dashboard</h1>
-//             <div>
-//                 {dailyIncomeData.map((data, index) => (
-//                     <div key={index}>
-//                         <p>Date: {data.date}</p>
-//                         <p>Total Income: ${data.income}</p>
-//                     </div>
-//                 ))}
-//             </div>
-//             {/* Other dashboard content */}
-//         </div>
-//     );
-// }
+        useEffect(() => {
+                // Create and update the chart when component mounts or total sales change
+                const ctx = document.getElementById('myChart').getContext('2d');
+            
+                const latestSevenDaysSales = salesData.slice(-7);
+                const labels = latestSevenDaysSales.map(day => day.date);
+                const data = latestSevenDaysSales.map(day => day.sales);
+            
+                const myChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                                labels: labels,
+                                datasets: [{
+                                        label: 'Total Sales',
+                                        data: data,
+                                        borderColor: 'rgb(75, 192, 192)',
+                                        tension: 0.1
+                                }]
+                        },
+                });
+            
+                return () => {
+                        // Cleanup when component unmounts
+                        myChart.destroy();
+                };
+        }, [totalSalesLatestSevenDays]);
+        
+        return (
+                <div className="income-container">
+                        <div className="total-sales">
+                                <p>Total Sales for the Latest 7 Days:</p>
+                                <h1>{totalSalesLatestSevenDays}</h1>
+                        </div>
+                        <div className="graph">
+                                <canvas id="myChart" style={{ width: '100%', maxWidth: '600px' }}></canvas>
+                        </div>
+                </div>
+        );
+};
