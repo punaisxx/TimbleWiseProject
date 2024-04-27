@@ -61,12 +61,13 @@ export default function ProductDetailPage({ product }) {
 export async function getServerSideProps({ params }) {
     const productId = params.productId;
     try {
-        const response = await fetch(`http://localhost:3002/api/getAllProduct`);
+        const response = await fetch('http://localhost:3002/api/getAllProduct');
         if (!response.ok) {
             throw new Error('Failed to fetch product data');
         }
-        const product = await response.json().find((p) => p.id === parseInt(productId));
-        console.log(product);
+        
+        const product = (await response.json()).find((p) => p.id == parseInt(productId));
+        console.log();
         return {
             props: {
                 product,
