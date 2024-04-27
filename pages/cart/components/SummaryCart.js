@@ -1,4 +1,5 @@
-const SummaryCart = () => {
+
+const SummaryCart = ({handlePayment}) => {
 
   const toCurrency = (value) => {
     return parseFloat(value).toLocaleString('th-TH', {minimumFractionDigits: 0})
@@ -25,9 +26,12 @@ const SummaryCart = () => {
       </div>
 
       <div className="mt-4">
-        <button className="px-4 py-2 bg-[#4CAF4F] text-white font-semibold text-xl rounded">
-          Payment
-        </button>
+        <button 
+          onClick={handlePayment}
+          className="px-4 py-2 bg-[#4CAF4F] text-white font-semibold text-xl rounded"
+        >
+            Payment
+          </button>
       </div>
     </div>
   );

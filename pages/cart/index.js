@@ -5,9 +5,11 @@ import SummaryCart from "./components/SummaryCart"
 import Image from "next/image";
 import imgTableExample from "../assets/images/table-example.webp"
 import { useState } from "react";
+import { useRouter } from 'next/navigation'
 
 const CartPage = () => {
 
+  const router = useRouter()
   const [cartItems, setCartItems] = useState([
     {
       id: 1,
@@ -34,6 +36,12 @@ const CartPage = () => {
 
   const handleItems = () => {
     // TODO: update items list
+
+  }
+
+  const handlePayment = () => {
+    // TODO: payment
+    router.push('/cart/payment')
   }
   
   return (
@@ -53,6 +61,7 @@ const CartPage = () => {
             <div className="w-full lg:w-1/3">
               <SummaryCart 
                 items={cartItems}
+                handlePayment={handlePayment}
               />
             </div>
 
