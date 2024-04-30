@@ -1,9 +1,12 @@
 import { Icon } from "@iconify/react";
-import Breadcrumbs from "../../components/Breadcrumbs";
-import Container from "../../components/Container";
+import Breadcrumbs from "../components/Breadcrumbs";
+import Container from "../components/Container";
 
-const CartComplete = ({userData,username}) => {
-  console.log(userData.find(user=>user.username=username));
+const CartComplete = ({
+  username,
+  userData
+}) => {
+  console.log(userData.find(user=>user.username===username));
   return (
     <>
       <Breadcrumbs />
@@ -26,9 +29,9 @@ const CartComplete = ({userData,username}) => {
               <div className="font-semibold">Address</div>
             </div>
             <div className="px-6">
-              {userData.find(user=>user.username=username).address}
+              {userData.find(user=>user.username===username).address}
               <br />
-              To : {userData.find(user=>user.username=username).first_name} {userData.find(user=>user.username=username).last_name}  Phone : {userData.find(user=>user.username=username).phone_number}
+              To : {userData.find(user=>user.username===username).first_name} {userData.find(user=>user.username===username).last_name}  Phone : {userData.find(user=>user.username===username).phone_number}
             </div>
           </div>
         </div>
@@ -40,37 +43,32 @@ const CartComplete = ({userData,username}) => {
 
 export default CartComplete;
 
-export async function getServerSideProps({ req }) {
+
+
+export async function getServerSideProps({req}) {
   try {
-      const token = req.cookies.token;
-
-      var response = await fetch('http://localhost:3001/api/getUserData', {
-          headers: {
-            'authorization': token // Pass token in the Authorization header
-          }
-      });
-
-      if (!response.ok) {
-          throw new Error('Failed to fetch product data');
+    const token = req.cookies.token; // Retrieve token from request cookies
+    var response = await fetch('http://localhost:3001/api/loginByToken', {
+      headers: {
+        'authorization': token // Pass token in the Authorization header
       }
+    });
       
-      const userData = await response.json();
-
-      response = await fetch('http://localhost:3001/api/loginByToken', {
-        headers: {
-          'authorization': token // Pass token in the Authorization header
-        }
-      });
-        
       const username = (await response.json()).username;
-
-      return {
-          props: {
-              userData,
-              username,
-          },
-      };
       
+    response = await fetch('http://localhost:3001/api/getUserData', {
+      headers: {
+        'authorization': token // Pass token in the Authorization header
+      }
+    });
+      
+      const userData=await response.json();
+      return {
+        props: {
+          username,
+          userData
+        },
+      };
   } catch (error) {
       console.error('Error:', error);
       return {
