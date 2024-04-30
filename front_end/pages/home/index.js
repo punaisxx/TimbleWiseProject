@@ -7,10 +7,6 @@ export default function Home() {
 
         return (
                 <div>
-                        {/* <Head>
-                                <title>TimbleWise</title>
-                        </Head> */}
-
                         <Header />
                         <div style={{ marginTop: '70px' }}></div>
                         <SlideShow />

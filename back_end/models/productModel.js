@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
 		quantity: Number,
 		image: String,
 		quantity_sold: Number,
+		comment: [Object]
   });
 
 module.exports = mongoose.model('product_data',userSchema);

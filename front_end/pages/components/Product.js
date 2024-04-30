@@ -1,7 +1,16 @@
-
-import productsData from '../product/product_list';
+import React, { useState, useEffect } from 'react';
 
 export default function Product() {
+        const [productsData, setProductsData] = useState([]);
+
+        useEffect(() => {
+                // Fetch product data from the API endpoint
+                fetch('http://localhost:3002/api/getAllProduct')
+                .then(response => response.json())
+                .then(data => setProductsData(data))
+                .catch(error => console.error('Error fetching product data:', error));
+        }, []);
+
         return (
                 <div className="product-container">
                         {productsData.map((product) => (
